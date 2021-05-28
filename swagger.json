@@ -3,13 +3,13 @@
   "info": {
     "version": "1.0.0",
     "title": "Arokoyu Olalekan => Check-DC Secured e-Wallet System API",
-    "description": "Api to manage auth, user, wallets, and transaction",
+    "description": "Api to manage auth, user, wallets, and transaction: Wallet credit and debit.",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "host": "localhost:8080",
+  "host": "checkdc-e-wallet-arokoyu.herokuapp.com",
   "basePath": "/api/v1",
   "tags": [
     {
@@ -38,7 +38,6 @@
     }
   ],
   "schemes": [
-    "http",
     "https"
   ],
   "consumes": [
