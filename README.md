@@ -3,6 +3,8 @@
 Handles all api calls possible requires to credit and debit a user wallet
 ## Issues, suggestions and feature requests
 
+Swagger documentation link: https://checkdc-e-wallet-arokoyu.herokuapp.com/api/v1/swagger-documentation/
+
 ## Development and contribution
 Prerequisite: Install git, node package manager, Node
 
