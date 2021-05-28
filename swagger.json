@@ -1,0 +1,1038 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Arokoyu Olalekan => Check-DC Secured e-Wallet System API",
+    "description": "Api to manage auth, user, wallets, and transaction",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:8080",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "API for user authentication"
+    },
+    {
+      "name": "Users",
+      "description": "API to manage users"
+    },
+    {
+      "name": "Profile",
+      "description": "API to manage bank account information"
+    },
+    {
+      "name": "Transaction",
+      "description": "API to manage transaction reports"
+    },
+    {
+      "name": "Bank",
+      "description": "API to list banks"
+    },
+    {
+      "name": "Wallet",
+      "description": "API to manage wallet process"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+
+
+    "/auth": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Test authentication API",
+        "responses": {
+          "200": {
+            "description": "Please specify the endpoint!"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Authenticate user by email and password",
+        "description": "User Auth by email and password",
+        "parameters": [
+          {
+            "name": "credential",
+            "in": "body",
+            "required": true,
+            "description": "User credentials",
+            "schema": {
+              "$ref": "#/definitions/loginCred"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "User authenticated successfully"
+          },
+          "400": {
+            "description": "Error while authenticating"
+          }
+        }
+      }
+
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register new user",
+        "description": "Register new user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "description": "Registration data",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "description": "Unable to register user, please retry"
+          }
+        }
+      }
+
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Authorization header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": "Log out user",
+        "description": "Log out users",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "User logout successfully"
+          },
+          "400": {
+            "description": "Error while logging out"
+          }
+        }
+      }
+
+    },
+
+
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "List all users",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization token",
+            "type": "string"
+          }, {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of users to return per call(Optional)",
+            "type": "string"
+          }, {
+            "name": "page",
+            "in": "query",
+            "description": "Page to move(Optional)",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users listed successfully",
+            "schema": {
+              "$ref": "#/definitions/Users"
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of user that we want to perform action",
+          "type": "string"
+        },
+        {
+          "name": "authorization",
+          "in": "header",
+          "description": "Authorization header",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user with given ID in the url as params",
+        "responses": {
+          "200": {
+            "description": "User fetched successful",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete user with given ID",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successful",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user with give ID",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User with new values of properties",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated successful",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+
+
+
+
+
+
+
+    "/transaction": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "List all transaction (Only admin role can perform this action)",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of transaction to return per call(Optional)",
+            "type": "string"
+          }, {
+            "name": "page",
+            "in": "query",
+            "description": "Page to move(Optional)",
+            "type": "string"
+          }, {
+            "name": "authorization",
+            "in": "header",
+            "description": "Authorization token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction listed successfully"
+          },
+          "400": {
+            "description": "Unable to list transaction",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+    "/transaction/payment-reference/{reference}": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get transaction by payment reference",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Authorization token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "reference",
+            "in": "path",
+            "required": true,
+            "description": "Transaction reference that we want to perform action",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction fetched successfully"
+          },
+          "400": {
+            "description": "Unable to fetch transaction",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+    "/transaction/by/paystack-transaction": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get transactions performed using paystack integration(Only by admin user)",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Authorization token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paystack transaction fetched successfully"
+          },
+          "400": {
+            "description": "Unable to fetch paystack transaction",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+    "/transaction/by/bank-transaction": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get transactions performed using bank transfer(Only by admin user)",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Authorization token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bank transaction fetched successfully"
+          },
+          "400": {
+            "description": "Unable to fetch bank transaction",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+    "/transaction/user/{userId}": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "List transactions by user id",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Authorization token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "User Id",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction fetched successfully"
+          },
+          "400": {
+            "description": "Unable to fetch transaction",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+    "/transaction/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of transaction",
+          "type": "string"
+        },
+        {
+          "name": "authorization",
+          "in": "header",
+          "description": "Authorization token",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get transaction with given ID",
+        "responses": {
+          "200": {
+            "description": "Transaction fetched successful"
+          },
+          "400": {
+            "description": "Unable to get transaction"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete transaction with given ID(Only by admin user)",
+        "tags": [
+          "Transaction"
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction deleted successful"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update transaction narration/status with given ID(Only by admin user)",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "transaction",
+            "in": "body",
+            "description": "Transaction with new values of properties"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction updated successful"
+          }
+        }
+      }
+    },
+    "/transaction/search-transaction": {
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+
+        "parameters": [
+          {
+            "name": "searchTransaction",
+            "in": "body",
+            "description": "Search transaction by name",
+            "schema": {
+              "$ref": "#/definitions/SearchTransaction"
+            }
+          }
+        ],
+        "summary": "Search transaction by narration, payment-reference etc",
+
+        "responses": {
+          "200": {
+            "description": "Transaction retrieved successfully"
+          },
+          "400": {
+            "description": "No transaction matches provided criteria!",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+
+    },
+    "/transaction/filter-transaction": {
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "transactionFilter",
+            "in": "body",
+            "description": "Filter transaction",
+            "schema": {
+              "$ref": "#/definitions/FilterTransaction"
+            }
+          }
+        ],
+        "summary": "Filter transaction by criteria.",
+        "responses": {
+          "200": {
+            "description": "Transaction filtered successfully"
+          },
+          "400": {
+            "description": "No transaction matches that filter!",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+
+
+    "/profile/list-banks": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "List all banks in Nigeria",
+        "responses": {
+          "200": {
+            "description": "Banks listed successfully"
+          }
+        }
+      }
+    },
+
+    "/profile/bank-setting/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "User id required",
+          "type": "string"
+        },
+        {
+          "name": "authorization",
+          "in": "header",
+          "description": "Authorization header",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Get user's bank information",
+        "responses": {
+          "200": {
+            "description": "User bank information fetched successful",
+            "schema": {
+              "$ref": "#/definitions/BankInfo"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create user bank information and verify the bank details",
+        "tags": [
+          "Profile"
+        ],
+        "parameters": [
+          {
+            "name": "bankInfo",
+            "in": "body",
+            "description": "Use information to create bank information",
+            "schema": {
+              "$ref": "#/definitions/BankInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bank information created successfully",
+            "schema": {
+              "$ref": "#/definitions/BankInfo"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user's bank setting",
+        "tags": [
+          "Profile"
+        ],
+        "parameters": [
+          {
+            "name": "bankInfo",
+            "in": "body",
+            "description": "Data to update",
+            "schema": {
+              "$ref": "#/definitions/BankInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bank information updated successfully",
+            "schema": {
+              "$ref": "#/definitions/BankInfo"
+            }
+          }
+        }
+      }
+    },
+
+    "/wallet/user/{userId}": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "userId of sponsor that we want to perform action",
+            "type": "string"
+          }, {
+            "name": "authorization",
+            "in": "header",
+            "description": "Authorization header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": "Get user wallet",
+        "responses": {
+          "200": {
+            "description": "User wallet fetched successful"
+          },
+          "400": {
+            "description": "Unable to get user wallet details",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+
+    "/wallet/withdraw": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "parameters": [ {
+          "name": "authorization",
+          "in": "header",
+          "description": "Authorization header",
+          "required": true,
+          "type": "string"
+        }
+        ],
+        "summary": "Withdraw from wallet",
+        "responses": {
+          "200": {
+            "description": "Wallet withdrawal successful"
+          },
+          "400": {
+            "description": "Unable to get withdraw from wallet",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+
+
+
+    "/wallet/fund": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Authorization header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "fund_wallet",
+            "in": "body",
+            "description": "Fund wallet with details",
+            "schema": {
+              "$ref": "#/definitions/FundWallet"
+            }
+          }
+        ],
+        "summary": "Fund-wallet with amount",
+
+        "responses": {
+          "200": {
+            "description": "Wallet funded successfully"
+          },
+          "400": {
+            "description": "Unable to fund wallet",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+    "/wallet/verify-paystack-payment": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Authorization header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "transactionId",
+            "in": "body",
+            "description": "Transaction Id for payment to verify",
+            "schema": {
+              "$ref": "#/definitions/transactionId"
+            }
+          }
+        ],
+        "summary": "Verify Paystack transaction",
+
+        "responses": {
+          "200": {
+            "description": "Payment verified successful"
+          },
+          "400": {
+            "description": "Unable to verify payment",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+    "/wallet/verify-bank-transfer": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Authorization header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": "Admin confirm a payment is successful i.e confirmation of receipt",
+
+        "responses": {
+          "200": {
+            "description": "Bank transfer payment successful"
+          },
+          "400": {
+            "description": "Unable to confirm payment",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+    "/wallet/withdrawal-history": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+
+        "parameters": [ {
+          "name": "authorization",
+          "in": "header",
+          "description": "Authorization header",
+          "required": true,
+          "type": "string"
+        }
+        ],
+        "summary": "Fetch all system withdrawal history for admin viewing",
+
+        "responses": {
+          "200": {
+            "description": "Withdrawal history fetched successfully"
+          },
+          "400": {
+            "description": "Unable to fetch withdrawal history",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+
+    },
+    "/wallet/withdrawal-history/user/{userId}": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+
+        "parameters": [ {
+          "name": "authorization",
+          "in": "header",
+          "description": "Authorization header",
+          "required": true,
+          "type": "string"
+        }, {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "User id to fetch withdrawal history",
+            "type": "string"
+          }
+        ],
+        "summary": "Fetch all system withdrawal history by user id",
+
+        "responses": {
+          "200": {
+            "description": "User's withdrawal history fetched successfully"
+          },
+          "400": {
+            "description": "Unable to fetch user withdrawal history",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+
+    }
+
+  },
+  "definitions": {
+    "User": {
+      "required": [
+        "email",
+        "password",
+        "last_name",
+        "first_name"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "is_verified": {
+          "type": "boolean",
+          "default": false
+        },
+        "role": {
+          "type": "string",
+          "enum": ["USER"],
+          "default": "USER"
+        }
+      }
+    },
+    "FilterTransaction": {
+      "properties": {
+        "narration": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorMessage": {
+      "properties": {
+        "error": {
+          "type": "object"
+        },
+        "status": {
+          "type": "string",
+          "default": "FAILURE"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+
+    "loginCred": {
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "BankInfo": {
+      "required": ["userId", "bank_name", "bank_code", "account_number", "bvn"],
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "bank_name": {
+          "type": "string"
+        },
+        "bank_code": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "account_name": {
+          "type": "string"
+        },
+        "bvn": {
+          "type": "string"
+        }
+      }
+    },
+    "transactionId": {
+      "required": ["transactionId"],
+      "properties": {
+        "transactionId": {
+          "type": "string"
+        }
+      }
+    },
+    "Amount": {
+      "required": ["amount"],
+      "properties": {
+        "amount": {
+          "type": "number"
+        }
+      }
+    },
+    "FundWallet": {
+      "required": ["amount", "userId", "payment_gateway"],
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "payment_gateway": {
+          "type": "string",
+          "enum": ["PAYSTACK", "BANK_TRANSFER"]
+        }
+      }
+    },
+    "SearchTransaction": {
+      "required": [],
+      "properties": {
+        "narration": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "paymentReference": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        }
+      }
+    },
+    "Users": {
+      "type": "array",
+      "$ref": "#/definitions/User"
+    }
+  }
+}
