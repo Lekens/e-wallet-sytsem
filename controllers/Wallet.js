@@ -7,6 +7,8 @@ const respHandler = require('../services/responseHandler');
 const validate = require('../services/validateService');
 const controllerService = require('../services/controllerServices');
 const bcrypt = require('bcrypt');
+const nanoid = require('nanoid');
+
 
 const WalletController = {
     /**
@@ -33,9 +35,9 @@ const WalletController = {
                             respHandler.sendError(res, 400, 'FAILURE', 'Bank account not found or bank account not verified!, kindly update you bank account using profile api');
                         } else {
                             // check if user have sufficient amount in their wallet
-                            const wallet = await Wallet.find({userId});
+                            const wallet = await Wallet.findOne({userId});
                             const formattedAmountToWithdraw = parseFloat(amount);
-                            if(wallet && wallet.wallet_balance && wallet.wallet_balance >= formattedAmountToWithdraw) {
+                            if(wallet && wallet.wallet_balance && parseFloat(wallet.wallet_balance) >= formattedAmountToWithdraw) {
                                 // Perform withdrawal from wallet
                                 // create debit transaction
                                 // create withdrawal history

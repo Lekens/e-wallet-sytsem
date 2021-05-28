@@ -700,7 +700,15 @@
           "description": "Authorization header",
           "required": true,
           "type": "string"
-        }
+        },
+          {
+            "name": "withdrawal_form",
+            "in": "body",
+            "description": "Withdrawal form",
+            "schema": {
+              "$ref": "#/definitions/WithdrawFromWaller"
+            }
+          }
         ],
         "summary": "Withdraw from wallet",
         "responses": {
@@ -1010,6 +1018,23 @@
         "payment_gateway": {
           "type": "string",
           "enum": ["PAYSTACK", "BANK_TRANSFER"]
+        }
+      }
+    },
+    "WithdrawFromWaller": {
+      "required": ["amount", "userId", "password", "narration"],
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "narration": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
         }
       }
     },
